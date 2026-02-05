@@ -1,91 +1,92 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const router = useRouter()
+const products = [
+  { id: 1, name: "MU Home Jersey 2025", price: "$79", image: "/jersey1.jpg" },
+  { id: 2, name: "MU Away Jersey 2025", price: "$75", image: "/jersey2.jpg" },
+  { id: 3, name: "MU Training Jacket", price: "$99", image: "/jacket.jpg" },
+  { id: 4, name: "MU Scarf", price: "$20", image: "/scarf.jpg" },
+  { id: 5, name: "MU Cap", price: "$18", image: "/cap.jpg" },
+  { id: 6, name: "MU Backpack", price: "$45", image: "/bag.jpg" },
+]
 
-  const handleLogin = () => {
-    const storedUser = localStorage.getItem("user")
-
-    if (!storedUser) {
-      setError("Account does not exist. Please register first.")
-      return
-    }
-
-    const user = JSON.parse(storedUser)
-
-    if (email !== user.email || password !== user.password) {
-      setError("Wrong email or password.")
-      return
-    }
-
-    setError("")
-    router.push("/home")
-  }
-
+export default function HomePage() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
+      className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/background.jpg')" }}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="min-h-screen bg-black/70 text-white">
 
-      <Card className="relative z-10 w-full max-w-md bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">Login</CardTitle>
-        </CardHeader>
+{/* NAVBAR */}
+<div className="flex justify-between items-center px-8 py-4 border-b border-white/20">
+  <h1 className="text-2xl font-bold text-red-600 flex items-center gap-2">
+    Manchester United
+    <img src="/logo.png" alt="MU Logo" className="w-8 h-8" />
+    Store
+  </h1>
 
-        <CardContent className="space-y-5">
-          {/* Email */}
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              placeholder="example@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+  <div className="flex items-center gap-4 text-white font-semibold">
+    {/* HOME */}
+    <button
+      onClick={() => window.location.reload()}
+      className="hover:text-red-500"
+    >
+      Home
+    </button>
 
-          {/* Password */}
-          <div className="space-y-2">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+    {/* LOGIN */}
+    <a
+      href="/login"
+      className="px-4 py-1 rounded-md bg-white text-black hover:bg-gray-200 transition font-semibold">
+      Login
+    </a>
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
 
-          <Button className="w-full" onClick={handleLogin}>
-            Sign In
-          </Button>
+    {/* REGISTER */}
+    <a
+      href="/register"
+      className="px-4 py-1 rounded-md bg-red-600 hover:bg-red-700 transition"
+    >
+      Register
+    </a>
+  </div>
+</div>
 
-          {/* Register text link */}
-          <p className="text-center text-sm text-gray-300">
-            Chưa có tài khoản?{" "}
-            <Link
-              href="/register"
-              className="text-blue-400 hover:text-blue-500 underline"
+
+        {/* HERO */}
+        <div className="text-center py-10">
+          <h2 className="text-4xl font-bold mb-2">Manchester United Store</h2>
+          <p className="text-gray-300">Official Merchandise Collection</p>
+        </div>
+
+        {/* PRODUCTS */}
+        <div className="px-8 pb-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <Card
+              key={product.id}
+              className="bg-black/60 backdrop-blur-md border border-white/20 text-white hover:scale-105 transition"
             >
-              Register
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+              <CardHeader>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-48 w-full object-cover rounded-md"
+                />
+              </CardHeader>
+
+              <CardContent className="space-y-2">
+                <CardTitle>{product.name}</CardTitle>
+                <p className="text-gray-300">{product.price}</p>
+                <Button className="w-full mt-2">Buy</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

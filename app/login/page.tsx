@@ -1,30 +1,36 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
+  const router = useRouter()
 
-  const handleRegister = () => {
-    if (!email || !password || !confirmPassword) {
-      setError("Vui lòng nhập đầy đủ thông tin")
-    } else if (password !== confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp")
-    } else {
-      localStorage.setItem("email", email)
-      localStorage.setItem("password", password)
-      setError("")
-      alert("Đăng ký thành công!")
-      window.location.href = "/login"
+  const handleLogin = () => {
+    const storedUser = localStorage.getItem("user")
+
+    if (!storedUser) {
+      setError("Account does not exist. Please register first.")
+      return
     }
+
+    const user = JSON.parse(storedUser)
+
+    if (email !== user.email || password !== user.password) {
+      setError("Wrong email or password.")
+      return
+    }
+
+    setError("")
+    router.push("/home")
   }
 
   return (
@@ -36,12 +42,13 @@ export default function RegisterPage() {
 
       <Card className="relative z-10 w-full max-w-md bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-xl">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Register</CardTitle>
+          <CardTitle className="text-center text-2xl">Login</CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="block mb-1">Email</Label>
+        <CardContent className="space-y-5">
+          {/* Email */}
+          <div className="space-y-2">
+            <Label>Email</Label>
             <Input
               type="email"
               placeholder="example@gmail.com"
@@ -50,8 +57,9 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div>
-            <Label className="block mb-1">Password</Label>
+          {/* Password */}
+          <div className="space-y-2">
+            <Label>Password</Label>
             <Input
               type="password"
               placeholder="••••••••"
@@ -60,26 +68,20 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div>
-            <Label className="block mb-1">Confirm Password</Label>
-            <Input
-              type="password"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
-
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
-          <Button className="w-full" onClick={handleRegister}>
-            Register
+          <Button className="w-full" onClick={handleLogin}>
+            Sign In
           </Button>
 
+          {/* Register text link */}
           <p className="text-center text-sm text-gray-300">
-            Đã có tài khoản?{" "}
-            <Link href="/login" className="text-white underline hover:text-red-400">
-              Login
+            Chưa có tài khoản?{" "}
+            <Link
+              href="/register"
+              className="text-blue-400 hover:text-blue-500 underline"
+            >
+              Register
             </Link>
           </p>
         </CardContent>
