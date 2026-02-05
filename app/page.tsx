@@ -81,7 +81,7 @@ export default function HomePage() {
               <CardContent className="space-y-2">
                 <CardTitle>{product.name}</CardTitle>
                 <p className="text-gray-300">{product.price}</p>
-                <Button className="w-full mt-2">Buy</Button>
+                <Button className="w-full mt-2">Add to cart</Button>
               </CardContent>
             </Card>
           ))}
